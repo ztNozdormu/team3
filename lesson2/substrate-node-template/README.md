@@ -123,3 +123,16 @@ git checkout <branch/tag/sha1>
 
 Noted though you will likely get faster and more thorough support if you stick with the releases
 provided in this repository.
+
+## 各个模块说明
+   node 节点
+     --chain_spec.rs 创世块相关
+     --cli.rs  命令行语句相关
+     --command.rs 
+     --service.rs core相关的模块和组件封装
+   pallets 各个具体的模块定义比如转账 关联类型 存储 自定义模块
+       使用宏精简了rust代码，不好的地方debug不好调试
+   runtime 运行时模块
+      construct_runtime!该宏指定了哪些pallets用哪些不用  
+   script 放脚本
+   target 编译后文件

@@ -18,7 +18,7 @@ mod mock;
 #[cfg(test)]
 mod tests;
 
-/// The pallet's configuration trait.
+/// The pallet's configuration trait. 自定义关联类型
 pub trait Trait: system::Trait {
 	// Add other types and constants required to configure this pallet.
 
@@ -26,7 +26,7 @@ pub trait Trait: system::Trait {
 	type Event: From<Event<Self>> + Into<<Self as system::Trait>::Event>;
 }
 
-// This pallet's storage items.
+// This pallet's storage items. 自定义存储
 decl_storage! {
 	// It is important to update your storage name so that your pallet's
 	// storage items are isolated from other pallets.
@@ -39,7 +39,7 @@ decl_storage! {
 	}
 }
 
-// The pallet's events
+// The pallet's events 自定义事件
 decl_event!(
 	pub enum Event<T> where AccountId = <T as system::Trait>::AccountId {
 		/// Just a dummy event.
@@ -49,7 +49,7 @@ decl_event!(
 	}
 );
 
-// The pallet's errors
+// The pallet's errors  自定义错误
 decl_error! {
 	pub enum Error for Module<T: Trait> {
 		/// Value was None
@@ -59,7 +59,7 @@ decl_error! {
 	}
 }
 
-// The pallet's dispatchable functions.
+// The pallet's dispatchable functions. 自定义功能模块
 decl_module! {
 	/// The module declaration.
 	pub struct Module<T: Trait> for enum Call where origin: T::Origin {

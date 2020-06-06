@@ -256,7 +256,11 @@ impl sudo::Trait for Runtime {
 impl template::Trait for Runtime {
 	type Event = Event;
 }
-
+// 为Runtime层实现一个存证功能模块
+impl proe::Trait for Runtime {
+     type Event = Event;
+}
+// Runtime运行时构造器
 construct_runtime!(
 	pub enum Runtime where
 		Block = Block,
@@ -273,6 +277,8 @@ construct_runtime!(
 		Sudo: sudo::{Module, Call, Config<T>, Storage, Event<T>},
 		// Used for the module template in `./template.rs`
 		TemplateModule: template::{Module, Call, Storage, Event<T>},
+		// Used for the module proe in `./template.rs`
+		ProeModule: proe::{Module,Call,Storage,Event<T>},
 	}
 );
 
