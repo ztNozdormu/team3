@@ -7,7 +7,7 @@ use sp_runtime::{
 	traits::{BlakeTwo256, IdentityLookup}, testing::Header, Perbill,
 };
 use frame_system as system;
-
+// transfer deal
 impl_outer_origin! {
 	pub enum Origin for Test {}
 }
