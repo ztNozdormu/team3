@@ -59,7 +59,7 @@ function Main (props) {
         <Menu.Menu position='right' style={{ alignItems: 'center' }}>
           { !accountSelected
             ? <span>
-              Add your account with the{' '}
+              Add your account555 with the{' '}
               <a
                 target='_blank'
                 rel='noopener noreferrer'
