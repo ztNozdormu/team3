@@ -45,6 +45,13 @@ git = 'https://github.com/paritytech/substrate.git'
 tag = 'v2.0.0-rc2'
 version = '2.0.0-rc2'
 
+[dependencies.timestamp]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+package = 'pallet-timestamp'
+tag = 'v2.0.0-rc2'
+version = '2.0.0-rc2'
+
 [dev-dependencies.sp-io]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
@@ -65,4 +72,5 @@ std = [
     'frame-system/std',
     'sp-std/std',
     'balances/std',
+    'timestamp/std',
 ]

@@ -1,3 +1,7 @@
+
+# dev command
+ ./node-template purge-chain --dev
+ ./node-template --dev --ws-external --rpc-external --rpc-cors=all
 # Substrate Node Template
 
 A new FRAME-based Substrate node, ready for hacking.

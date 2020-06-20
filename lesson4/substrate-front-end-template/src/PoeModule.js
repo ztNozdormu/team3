@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createRef } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Form, Input, Grid,Menu,
+import {Table, Form, Input, Grid,Menu,
   Button,
   Dropdown,
   Container,
@@ -28,9 +28,10 @@ function Main (props) {
   const [digest,setDigest] = useState('');
   const [owner,setOwner] = useState('');
   const [blockNumber,setBlockNumber] = useState(0);
-
+  const [claimInfos,setClaimInfos]=useState(new Array());
   useEffect(() => {
     let unsubscribe;
+    
     // 检查poeModule模块的proofs存储是否有更新，通过digest去查对应的数据result
     api.query.poeModule.proofs(digest,(result) => {
       // The storage value is an Option<u32> 
@@ -41,9 +42,39 @@ function Main (props) {
       unsubscribe = unsub;
     })
       .catch(console.error);
+
+    // =================用户存证数据变化监听========
+ 
+    api.query.poeModule.claimInfoList((result)=> {
+      // const balancesMap = addresses.reduce((acc, address, index) => ({
+      //   ...acc, [address]: balances[index].data.free.toHuman()
+      // }), {});
+      setClaimInfos(result);
+      console.log(result);
+    }).then(unsub => {
+      unsubscribe = unsub;
+    }).catch(console.error);
+  // =================用户存证数据变化监听========
+
     // 清理组件状态的时候解除监听事件
     return () => unsubscribe && unsubscribe();
   }, [digest,api.query.poeModule]);
+
+  // useEffect(() => {
+  //   const addresses = keyring.getPairs().map(account => account.address);
+  //   let unsubscribeAll = null;
+
+  //   api.query.poeModule.claimInfoList((result)=> {
+  //       const balancesMap = addresses.reduce((acc, address, index) => ({
+  //         ...acc, [address]: balances[index].data.free.toHuman()
+  //       }), {});
+  //       setBalances(balancesMap);
+  //     }).then(unsub => {
+  //       unsubscribeAll = unsub;
+  //     }).catch(console.error);
+
+  //   return () => unsubscribeAll && unsubscribeAll();
+  // },[api.query.poeModule]);
   // 定义存证文件选中方法
   const handleFileChoose = (file) =>{
     let fileReader = new FileReader();
@@ -66,9 +97,12 @@ function Main (props) {
   const [formState, setFormState] = useState({ sellPrice: 1000, buyPrice: 0 });
   const onChange = (_, data) =>
     setFormState(prev => ({ ...prev, [data.state]: data.value }));
-  const { sellPrice, buyPrice } = formState;
+  const { sellPrice, buyPrice,comment } = formState;
 
   // ========================购买存证========================================
+  // ========================设置存证备注信息=================================
+  // comment
+  // ========================设置存证备注信息=================================
   // 自定义UI组件
   return (
     <Grid.Column width={8}>
@@ -168,22 +202,86 @@ function Main (props) {
                 paramFields:[true,true]
               }}
            />
+             {/* 为存证增加备注信息*/}
+        <Form.Field>
+          <Input
+            fluid
+            label='备注信息'
+            type='string'
+            state='comment'
+            onChange={onChange}
+          />
+        </Form.Field>
+        <TxButton 
+              accountPair={accountPair}
+              label='保存存证备注信息'
+              setStatus={setStatus}
+              type='SIGNED-TX'
+              attrs={{
+                palletRpc:'poeModule',
+                callable:'saveClaimInfo',
+                inputParams:[digest,comment],
+                paramFields:[true,true]
+              }}
+           />
+           <TxButton 
+              accountPair={accountPair}
+              label='查询存证列表'
+              setStatus={setStatus}
+              type='SIGNED-TX'
+              attrs={{
+                palletRpc:'poeModule',
+                callable:'claimListByAccount',
+                inputParams:[],
+                paramFields:[],
+              }}
+           />
          {/* 操作信息提示 */}
             <div>{status}</div>
             <div>{`Claim info , owner is ${owner},baockNumber is ${blockNumber}`}</div>
-            <div>{`Claim info , owner is ${owner},baockNumber is ${blockNumber},accepter is ${accountAddress}`}</div>
+            {/* <div>{`Claim info , owner is ${owner},baockNumber is ${blockNumber},accepter is ${accountAddress}`}</div>
             <div>{`Claim info , seller: ${owner},set the sellPrice is ${sellPrice}`}</div>
-            <div>{`Claim info , buyer: ${owner},set buy the claim in block:${blockNumber}`}</div>
+            <div>{`Claim info , buyer: ${owner},set buy the claim in block:${blockNumber}`}</div> */}
       </Form>
       {/* ===========存证UI======= */}
-
+      {/* ===========当前用户的存证信息列表======= */}
+      <h1>Proofs of Existence list</h1>
+      <Table celled striped size='small'>
+        <Table.Body>
+        {/* {accounts.map(account => */}
+         {claimInfos.forEach((claimInfo)=>{
+          <Table.Row key={claimInfo.accountId}>
+            <Table.Cell width={3} textAlign='right'>{claimInfo.accountId}</Table.Cell>
+            <Table.Cell width={3}>
+              <span style={{ display: 'inline-block', minWidth: '31em' }}>
+                {claimInfo.claimHash}
+              </span>
+              <CopyToClipboard text={account.claimHash}>
+                <Button
+                  basic
+                  circular
+                  compact
+                  size='mini'
+                  color='blue'
+                  icon='copy outline'
+                />
+              </CopyToClipboard>
+            </Table.Cell>
+            <Table.Cell width={3} textAlign='center'>{claimInfo.createTime}</Table.Cell>
+             <Table.Cell width={3} textAlign='center'>{claimInfo.comment}</Table.Cell>
+             <Table.Cell width={3} textAlign='center'>{claimInfo.blockNumber}</Table.Cell>
+          </Table.Row>
+        })}
+        </Table.Body>
+      </Table>
+       {/* ===========当前用户的存证信息列表======= */}
     </Grid.Column>
     
   );
 }
 
 export default function PoeModule (props) {
-  // 返回区块链api对象
+  // 返回区块链api对
   const { api } = useSubstrate();
   // 判断是否存在poeModule模块 以及模块的存储是否存在 则渲染main组件
   return (api.query.poeModule && api.query.poeModule.proofs
