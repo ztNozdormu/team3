@@ -8,7 +8,7 @@
 
 用 node. js 的话，则是写一个类似函数：
 
-```javascript
+```
 // 取得 ApiPromise, 连到去远端 Substrate 节点的代码
 
 function submitDocInfo(filePath, comment) {
@@ -16,11 +16,19 @@ function submitDocInfo(filePath, comment) {
 }
 ```
 
+### 存证创建以及信息保存:
+
+![新建存证并保存存证信息](.\assest\新建存证并保存存证信息.png)
+
+事件:
+
+![存证备注信息保存成功事件](.\assest\存证备注信息保存成功事件.png)
+
 附加题：这一题需要改动 前端 **及 Substrate 节点** 的代码。现在也加一个功能，允许前端输入一个 AccountID，遍历显示属于该用户的文件 hash, 其创建日期，及其备注
 
 用 node.js 的话，则是写一个类似函数：
 
-```javascript
+```
 // 取得 ApiPromise, 连到去远端 Substrate 节点的代码
 
 function getDocInfoFromAddr(addr) {
@@ -32,3 +40,11 @@ function getDocInfoFromAddr(addr) {
   // }, {}, ...]
 }
 ```
+
+### Lesson3前端代码没有找到自定义类型设置入口；使用APPS调试数据和后台方法：
+
+![新建存证并保存存证信息](.\assest\保存存证信息.png)
+
+### 查询用户存证信息：
+
+### ![新建存证并保存存证信息](.\assest\查询用户存证列表数据.png)
